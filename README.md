@@ -130,43 +130,43 @@ You can listen to callbacks from SDK to show proper messaging to the end user wh
       ```
 
 #### **Step 3: Configure texts, colors and UI elements**
-Each Web Widget supports configuration wrt strings (i18n), navigations from CTAs, fonts, colors, visibility toggling of some of the UI elements and vairous other global configurations common to all Widgets. You can fine tune each UI element on all Widgets via Configuration Sheets (templated) shared by Bidgely once you are on-boarded on the system to use the SDK.
+Each Web Widget supports configuration wrt strings (i18n), navigations from CTAs, fonts, colors, visibility toggling of some of the UI elements and various other global configurations common to all Widgets. You can fine tune each UI element on a Widget via Configuration Sheets (templates) shared by Bidgely once you are on-boarded on the system to use the SDK.
 
-#### **Step 4: Configure Navigation for CTAs**
-Bidgley provides two ways to configure CTA navigations on all the widgets : 
-1. Define the navigation link for the CTA via Configuration Sheet -
+#### **Step 4: Configure Navigation for CTA buttons**
+Bidgley provides two ways to configure CTA button navigations on each widget : 
+1. Define the navigation link for the CTA via Configuration Sheet -<br>
     * Absolute URL
       
-      You configure the navigation link to be - https://dashboard.your-website.com/shc<br>
-      Current URL location : https://dashboard.your-website.com/usage?id=1234&token=qwerty<br>
+      Say you configure the navigation link to be - [https://dashboard.your-website.com/shc]()<br>
+      Current URL location : [https://dashboard.your-website.com/usage?id=1234&token=qwerty]()<br>
       User clicks on “See how you compare“ button on Insights Usage Widget -<br>
-      A new window tab opens up with URL location : https://dashboard.your-website.com/shc“
+      A new window tab opens up with URL location : [https://dashboard.your-website.com/shc“]()
 
     * Relative URL
       
-      You configure the navigation link to be - “/shc“<br>
-      Current URL location : https://dashboard.your-website.com/usage?id=1234&token=qwerty<br>
+      Say you configure the navigation link to be - “/shc“<br>
+      Current URL location : [https://dashboard.your-website.com/usage?id=1234&token=qwerty]()<br>
       User clicks on “See how you compare“ button on Insights Usage Widget -<br>
-      Navigation happens on the same window to the path configured. New URL location : https://dashboard.your-website.com/shc?id=1234&token=qwerty<br>
+      Navigation happens on the same window to the path configured. New URL location : [https://dashboard.your-website.com/shc?id=1234&token=qwerty]()<br>
     * Hash location
 
       **Case 1:**
-      Utility configures the navigation link to be - “#shc“<br>
-      Current URL location : https://dashboard.your-website.com/usage?id=1234&token=qwerty<br>
+      <br>Utility configures the navigation link to be - “#shc“<br>
+      Current URL location : [https://dashboard.your-website.com/usage?id=1234&token=qwerty]()<br>
       User clicks on “See how you compare“ button on Insights Usage Widget -<br>
-      Scroll happens on the same window to the hash location configured. New URL location : https://dashboard.electricireland.com/usage?id=1234&token=qwerty#shc<br><br>
+      Scroll happens on the same window to the hash location configured. New URL location : [https://dashboard.your-website.com/usage?id=1234&token=qwerty#shc]()<br><br>
 
       **Case 2**
-      Utility configures the navigation link to be - “#shc“<br>
-      Current URL location : https://dashboard.electricireland.com/insights?id=1234&token=qwerty#usage<br>
+      <br>Utility configures the navigation link to be - “#shc“<br>
+      Current URL location : [https://dashboard.your-website.com/insights?id=1234&token=qwerty#usage]()<br>
       User clicks on “See how you compare“ button on Insights Usage Widget -<br>
-      Scroll happens on the same window to the hash location configured. New URL location : https://dashboard.electricireland.com/insights?id=1234&token=qwerty#shc<br>
+      Scroll happens on the same window to the hash location configured. New URL location : [https://dashboard.your-website.com/insights?id=1234&token=qwerty#shc]()<br>
 
     Pressing back from any of the above (except Example 1) will take the user back to previous URL location.
 
 2. Listen to action events from the SDK and handle navigations by yourself -
 
-    The SDK can be configured to not do a navigation when the user clicks on a CTA button but rather broadcast a navigation event with all the relevant info of the button element. You can listen to this event and handle the navigation by your own using the meta-data returned in the event like so :
+    The SDK can be configured to not do a navigation when the user clicks on a CTA button and simply broadcast a navigation event with all the relevant info of the button element. You can listen to this event and handle the navigation by your own using the data returned in the event like so :
 
     ```
     window.addEventListener('bgl-event-onlocationupdate', function(event) {
