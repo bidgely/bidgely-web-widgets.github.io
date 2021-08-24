@@ -1,37 +1,140 @@
-## Welcome to GitHub Pages
+## Bidgely Web Embeddable Widgets SDK
 
-You can use the [editor on GitHub](https://github.com/bidgely/bidgely-web-widgets.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+Bidgely Web Embeddable Widgets solution provides an easy and seamless way of embedding Bidgely energy analytics Widgets as [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) within a Utility hosted webpage, mobile app and popular CRM tools. Each Web Widget modulazises functionality and content, allowing for a responsive layout with configuration capabilities.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Most of Bidgely’s Web Widgets are designed to present personalized information for a single Utility Customer. 
+In the following sections we illustrate the overall integration flow for each of the two available Widget technologies:
 
-### Markdown
+### Before you start
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+You will need to have an account with Bidgely. Please reach out to api-request@bidgely.com, speficying : 
+* Your name
+* Your email address
+* Your company details
+* Reason for your interest in Bidgely's Web Embeddable Widgets SDK
 
-```markdown
-Syntax highlighted code block
+### SDK Integrations
 
-# Header 1
-## Header 2
-### Header 3
+How to integrate Web Embeddable Widgets SDK on various platforms: 
 
-- Bulleted
-- List
+* [Get Started with Web](#integrateWeb)
+* [Get Started with Salesforce](#integrateSF)
 
-1. Numbered
-2. List
+### <a name="integrateWeb"></a> Get Started with Web
 
-**Bold** and _Italic_ and `Code` text
+Overview of integration :
 
-[Link](url) and ![Image](src)
-```
+![alt text](./assets/init-sequence.png)
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+#### **Step 1: Get Access Token to init the SDK** 
 
-### Jekyll Themes
+To initialise the SDK, you need to first acquire an access token from Bidgely service via a server-to-server API call on a secured channel. This access token has a running session expiry time of typically 30 mins which is returned along with the access token as reponse to this API.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/bidgely/bidgely-web-widgets.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+API Information : 
 
-### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+        GET : https://dev-api.bidgely.com/oauth/token?grant_type=client_credentials&scope=all
+
+        Authorization Type : Basic Auth
+
+        RESPONSE : 200 OK
+        {
+          "access_token": "9dd7df91-b99c-40cf-8014-dd225bdf99a8",
+          "token_type": "bearer",
+          "expires_in": 108000,
+          "scope": "all",
+          "url": "?uuid=all"
+      }
+
+
+You should use this access token to init the SDK and keep track of the expiry time. If the access token expires during a running client session, it can be re-requested from Bidgely service.
+
+Once you are on-boarded to the Bidgely system, your Authorization credentials would be shared to you by Bidgely. You should keep the credentials at a secure location and not bundle it with the client code. 
+#### **Step 2: Integrate the SDK**
+
+To add the Web SDK to your project, download the SDK from [here]().
+
+1. Goto your main index.html page and import the main bundle.js & main CSS file from the downloaded .zip above.
+
+
+        <html>
+          <head> 
+            <script src="bundle.js"></script>
+            <link href="./static/css/main.css" rel="stylesheet">
+          </head>
+          <body>
+            <!-- Utility website contents --> 
+            <div class="custom-widget"> 
+              <bidgely-usage-insights></bidgely-usage-insights> 
+            </div>
+          </body> 
+        </html>
+
+2. Set the request payload for the SDK - In order to access the Customer’s information available on the Bidgely SaaS platform, Web Widgets SDK requires that the hosting service provides the proper unique customer identifiers :
+    *  auth_key : Access token obtained in the previous step 
+    *  utility_id :  Unique ID given to a Utility in Bidgely system
+    *  user_id : Unique ID provisioned to a user in Utility system
+    *  fuel_type : Type of fuel - electic, gas, water
+    *  account_type : Type of account - residential, SMB
+    *  meter_id : ID of the meter
+
+    The SDK is initialised with the above payload with the following code : 
+
+        BidgelyWebSdk.initialize(BidgelyWebSdk.RUN_MODE.PROD, payload, (response) => {
+
+          /**
+          *  response = {
+          *    messageType : ‘Success’ | ‘Failure’
+          *  }
+          */  
+          
+        })
+
+    Post successful init, the SDK invokes all the Bidgely Widgets present on the web page and loads their UI.
+
+#### **Step 3: Listen to callbacks**
+
+Listen to callbacks from SDK to show proper messaging to the end user while the SDK is loading the Widgets:
+   * SDK Init callback 
+
+      You can pass a callback function to the BidgelyWebSDK init API and receive status of initialization. 
+
+      ```
+      Callback Response structure :
+      {
+        messageType : 'SUCCESS'
+      }
+      OR
+      {
+        messageType : 'ERROR',
+        data : {
+          errorCode : '401',
+          errorMessage : 'Unauthorized. Request parameters are invalid'
+        }
+      }
+      ```
+
+   * Widget UI Ready callback
+     
+     You can listen to UI ready events, for each individual Widget added on the page, on the same callback passed to BidgelyWebSdk init API and tune your user experience by adding / removing appropriate loaders.
+     
+
+      ```
+      Callback Response structure :
+      {
+        messageType: 'WIDGET_UI_READY',
+        data: {
+          id: 'bidgely-usage-insights' // Custom tag of the Widget
+        }
+      }
+      ```
+
+#### **Step 3: Configure texts, colors and UI elements**
+
+
+### <a name="integrateSF"></a> Get Started with Salesforce
+
+
+
+[Terms of Service](https://www.bidgely.com/terms-and-conditions/) | 
+[Contact Us](https://go.bidgely.com/contact-us)
